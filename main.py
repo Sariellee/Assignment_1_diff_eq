@@ -29,7 +29,7 @@ def improved_euler(x_vector, y_vector, delta, limit):
     return x_vector, y_vector
 
 
-def runge_kutta():
+def runge_kutta(x_vector, y_vector, delta, limit):
     i = 0
     while i < limit:
         k1 = delta * funct(x_vector[i], y_vector[i])
@@ -55,7 +55,7 @@ while i < limit:
 x_vector[0] = 0
 y_vector[0] = 1
 
-x_vector, y_vector = improved_euler(x_vector, y_vector, delta, limit)
+x_vector, y_vector = euler(x_vector, y_vector, delta, limit)
 
 print x_vector
 print y_vector
