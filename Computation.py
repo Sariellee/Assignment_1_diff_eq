@@ -106,6 +106,7 @@ class Computation:
             size_error = 0  # So this trick allows to use any step up to 10^(-5)
         else:
             size_error = 1
+        size_error = 1
 
         # Filling the arrays with 0 initially
         euler_x_vector = [0] * int(int(limit / delta) + size_error - int(IVPx / delta))
