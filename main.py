@@ -2,32 +2,31 @@ from Plot import *
 from Computation import *
 from tkinter import *
 
-deltaa = 0.22222  # our step
-limita = 4  # rightmost interval border
-IVPxa = 1  # X of IVP
-IVPya = 1  # Y of IVP
-
-
-def main():
-    app = Tk()
+def main(app):
+    app.winfo_toplevel().title("Diffur Master")
     head = Label(app, text="Numerical methods for equation sin^2(x) + y * ctg(x)")
     inp = Frame(app)
 
     IVPx = Frame(inp)
     IVPx_label = Label(IVPx, text="IVP(x)")
-    IVPx_entry = Entry(IVPx)
+    default_IVPx = StringVar(app, value=1)
+    IVPx_entry = Entry(IVPx, textvariable=default_IVPx)
 
     IVPy = Frame(inp)
     IVPy_label = Label(IVPy, text="IVP(y)")
-    IVPy_entry = Entry(IVPy)
+    default_IVPy = StringVar(app, value=1)
+    IVPy_entry = Entry(IVPy, textvariable=default_IVPy)
 
     limit = Frame(inp)
     limit_label = Label(limit, text="border(x)")
-    limit_entry = Entry(limit)
+    default_limit = StringVar(app, value=3)
+    limit_entry = Entry(limit, textvariable=default_limit)
 
     delta = Frame(inp)
     delta_label = Label(delta, text="step")
-    delta_entry = Entry(delta)
+    default_delta = StringVar(app, value=0.5)
+    delta_entry = Entry(delta, textvariable=default_delta)
+
 
     buttn = Frame(app)
     bttn_graphs = Button(buttn, text="Plot the solution graphs")
@@ -59,11 +58,46 @@ def main():
     bttn_errN.pack()
     buttn.pack()
 
-    bttn_graphs.configure(command=lambda: compute_graphs(float(IVPx_entry.get()), float(IVPy_entry.get()), float(limit_entry.get()), float(delta_entry.get())))
-    bttn_error.configure(command=lambda: compute_error(float(IVPx_entry.get()), float(IVPy_entry.get()), float(limit_entry.get()), float(delta_entry.get())))
-    bttn_errN.configure(command=lambda: compute_errN(float(IVPx_entry.get()), float(IVPy_entry.get()), float(limit_entry.get()), float(delta_entry.get())))
+    bttn_graphs.configure(command=lambda: handler(IVPx_entry.get(), IVPy_entry.get(), limit_entry.get(), delta_entry.get(), 0))
+    bttn_error.configure(command=lambda: handler(IVPx_entry.get(), IVPy_entry.get(), limit_entry.get(), delta_entry.get(), 1))
+    bttn_errN.configure(command=lambda: handler(IVPx_entry.get(), IVPy_entry.get(), limit_entry.get(), delta_entry.get(), 2))
 
     app.mainloop()
+
+
+def handler(IVPx, IVPy, limit, delta, mode):
+    try:
+        IVPx = float(IVPx)
+        IVPy = float(IVPy)
+        limit = float(limit)
+        delta = float(delta)
+    except:
+        error = Label(app, text="Wrong input! Try using numbers")
+        error.config(fg="red")
+        error.pack()
+        return
+    if IVPx > limit:
+        error = Label(app, text="Swap the IVPx and limit!")
+        error.config(fg="red")
+        error.pack()
+        return
+    if delta <= 0:
+        if delta == 0:
+            error = Label(app, text="Do you want me to divide by zero?")
+        else:
+            error = Label(app, text="Can't have negative step. Sorry mate")
+        error.config(fg="red")
+        error.pack()
+        return
+    if mode == 0:
+        compute_graphs(IVPx, IVPy, limit, delta)
+    if mode == 1:
+        compute_error(IVPx, IVPy, limit, delta)
+    if mode == 2:
+        compute_errN(IVPx, IVPy, limit, delta)
+    return
+
+
 
 
 def compute_graphs(IVPx, IVPy, limit, delta):
@@ -90,4 +124,5 @@ def compute_errN(IVPx, IVPy, limit, delta):
 
 
 if __name__ == '__main__':
-    main()
+    app = Tk()
+    main(app)

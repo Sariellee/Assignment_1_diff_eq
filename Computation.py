@@ -21,6 +21,9 @@ class Computation:
         else:
             return pow(math.sin(x), 2) + y * pow(math.tan(x), -1)
 
+    # analytically solved equation
+    def exact(self, x, c):
+        return c * math.sin(x) - math.sin(x) * math.cos(x)
 
     # calculating IVP based on exact solution of the equation
     def calculate_c(self, x, y):
@@ -28,18 +31,6 @@ class Computation:
             return 99999999
         return (math.sin(x) * math.cos(x) + y) / math.sin(x)
 
-
-    # analytically solved equation
-    def exact(self, x, c):
-        return c * math.sin(x) - math.sin(x) * math.cos(x)
-
-
-    # def funct14(x, y):
-    #     return pow(y, 4) * math.cos(x) + y * math.tan(x)
-    #
-    #
-    # def exact14(x):
-    #     return pow(1 / (-3 * math.sin(x) * pow(math.cos(x), 2) + pow(math.cos(x), 3)), 1 / 3)
 
     # euler method for solving the equation numerically
     def euler(self, x_vector, y_vector, delta, limit):
@@ -102,21 +93,18 @@ class Computation:
 
     # The main method, computing the equation with all 3 methods (+exact)
     def compute(self, delta, IVPx, IVPy, limit):
-        if delta <= 0.22222:  # the error in computing size of array appears at about 0.222(2) point.
-            size_error = 0  # So this trick allows to use any step up to 10^(-5)
-        else:
-            size_error = 1
-        size_error = 1
 
         # Filling the arrays with 0 initially
-        euler_x_vector = [0] * int(int(limit / delta) + size_error - int(IVPx / delta))
-        euler_y_vector = [0] * int(int(limit / delta) + size_error - int(IVPx / delta))
-        imp_euler_x_vector = [0] * int(int(limit / delta) + size_error - int(IVPx / delta))
-        imp_euler_y_vector = [0] * int(int(limit / delta) + size_error - int(IVPx / delta))
-        rk_x_vector = [0] * int(int(limit / delta) + size_error - int(IVPx / delta))
-        rk_y_vector = [0] * int(int(limit / delta) + size_error - int(IVPx / delta))
-        exact_x_vector = [0] * int(int(limit / delta) + size_error - int(IVPx / delta))
-        exact_y_vector = [0] * int(int(limit / delta) + size_error - int(IVPx / delta))
+        euler_x_vector = [0] * int(int(limit / delta)+1 - int(IVPx / delta))
+        euler_y_vector = [0] * int(int(limit / delta) + 1 - int(IVPx / delta))
+        imp_euler_x_vector = [0] * int(int(limit / delta) + 1 - int(IVPx / delta))
+        imp_euler_y_vector = [0] * int(int(limit / delta) + 1 - int(IVPx / delta))
+        rk_x_vector = [0] * int(int(limit / delta) + 1 - int(IVPx / delta))
+        rk_y_vector = [0] * int(int(limit / delta) + 1 - int(IVPx / delta))
+        exact_x_vector = [0] * int(int(limit / delta) + 1 - int(IVPx / delta))
+        exact_y_vector = [0] * int(int(limit / delta) + 1 - int(IVPx / delta))
+
+
 
         # Assigning the IVPs as the first elements of X array and Y array.
         euler_x_vector[0] = imp_euler_x_vector[0] = rk_x_vector[0] = exact_x_vector[0] = IVPx
@@ -127,6 +115,21 @@ class Computation:
         imp_euler_x_vector, imp_euler_y_vector = self.improved_euler(imp_euler_x_vector, imp_euler_y_vector, delta, limit)
         rk_x_vector, rk_y_vector = self.runge_kutta(rk_x_vector, rk_y_vector, delta, limit)
         exact_x_vector, exact_y_vector = self.exact_fill(exact_x_vector, exact_y_vector, delta, limit)
+
+
+        if (euler_x_vector[len(euler_x_vector)-1] == 0):
+            euler_x_vector.pop(len(euler_x_vector)-1)
+            euler_y_vector.pop(len(euler_y_vector)-1)
+        if (imp_euler_x_vector[len(imp_euler_x_vector)-1] == 0):
+            imp_euler_x_vector.pop(len(imp_euler_x_vector)-1)
+            imp_euler_y_vector.pop(len(imp_euler_y_vector)-1)
+        if (rk_x_vector[len(rk_x_vector) - 1] == 0):
+            rk_x_vector.pop(len(rk_x_vector) - 1)
+            rk_y_vector.pop(len(rk_y_vector) - 1)
+        if (exact_x_vector[len(exact_x_vector) - 1] == 0):
+            exact_x_vector.pop(len(exact_x_vector) - 1)
+            exact_y_vector.pop(len(exact_y_vector) - 1)
+
 
         return euler_x_vector, euler_y_vector, imp_euler_x_vector, imp_euler_y_vector, \
                rk_x_vector, rk_y_vector, exact_x_vector, exact_y_vector
