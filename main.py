@@ -2,6 +2,9 @@ from Plot import *
 from Computation import *
 from tkinter import *
 
+"""
+Launches the app and initializes all the windows, buttons and entries.
+"""
 def main(app):
     app.winfo_toplevel().title("Diffur Master")
     head = Label(app, text="Numerical methods for equation sin^2(x) + y * ctg(x)")
@@ -26,7 +29,6 @@ def main(app):
     delta_label = Label(delta, text="step")
     default_delta = StringVar(app, value=0.5)
     delta_entry = Entry(delta, textvariable=default_delta)
-
 
     buttn = Frame(app)
     bttn_graphs = Button(buttn, text="Plot the solution graphs")
@@ -58,13 +60,19 @@ def main(app):
     bttn_errN.pack()
     buttn.pack()
 
-    bttn_graphs.configure(command=lambda: handler(IVPx_entry.get(), IVPy_entry.get(), limit_entry.get(), delta_entry.get(), 0))
-    bttn_error.configure(command=lambda: handler(IVPx_entry.get(), IVPy_entry.get(), limit_entry.get(), delta_entry.get(), 1))
-    bttn_errN.configure(command=lambda: handler(IVPx_entry.get(), IVPy_entry.get(), limit_entry.get(), delta_entry.get(), 2))
+    bttn_graphs.configure(
+        command=lambda: handler(IVPx_entry.get(), IVPy_entry.get(), limit_entry.get(), delta_entry.get(), 0))
+    bttn_error.configure(
+        command=lambda: handler(IVPx_entry.get(), IVPy_entry.get(), limit_entry.get(), delta_entry.get(), 1))
+    bttn_errN.configure(
+        command=lambda: handler(IVPx_entry.get(), IVPy_entry.get(), limit_entry.get(), delta_entry.get(), 2))
 
     app.mainloop()
 
 
+"""
+Handles all the errors with the input and passes the parameters to the computation methods.
+"""
 def handler(IVPx, IVPy, limit, delta, mode):
     try:
         IVPx = float(IVPx)
@@ -98,8 +106,9 @@ def handler(IVPx, IVPy, limit, delta, mode):
     return
 
 
-
-
+"""
+Plots the solution graphs on a separate window
+"""
 def compute_graphs(IVPx, IVPy, limit, delta):
     solution = Computation(IVPx, IVPy, limit, delta)
     plotter = Plot("Plot")
@@ -109,6 +118,9 @@ def compute_graphs(IVPx, IVPy, limit, delta):
                         solution.solution["Exact"][0], solution.solution["Exact"][1])
 
 
+"""
+Plots the local error graphs in a separate window
+"""
 def compute_error(IVPx, IVPy, limit, delta):
     solution = Computation(IVPx, IVPy, limit, delta)
     plotter = Plot("Plot")
@@ -118,11 +130,17 @@ def compute_error(IVPx, IVPy, limit, delta):
                                     solution.solution["Exact"][0], solution.solution["Exact"][1])
 
 
+"""
+Plots the "Max error for step size" graph in a separate window"
+"""
 def compute_errN(IVPx, IVPy, limit, delta):
     plotter = Plot("Plot")
     plotter.plot_max_error_graph(limit, IVPx, IVPy, delta)
 
 
+"""
+Initialize the tkinter instance and pass it to main()
+"""
 if __name__ == '__main__':
     app = Tk()
     main(app)

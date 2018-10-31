@@ -13,9 +13,8 @@ class Plot:
         self.figure.suptitle(title)
 
     """
-    plotting the functions
+    Plotting the functions.
     """
-
     def plot_graphs(self, euler_x_vector, euler_y_vector, imp_euler_x_vector, imp_euler_y_vector,
                     rk_x_vector, rk_y_vector, exact_x_vector, exact_y_vector):
         pyplot.figure()
@@ -29,8 +28,10 @@ class Plot:
         pyplot.ylabel("Y")
         pyplot.show()
 
-    # plotting the local error function
-    # redundant parameters are for consistency
+    """
+    Plotting the local error function.
+    redundant parameters are for consistency (to always give the full set of solutions to the method)
+    """
     def plot_local_error_graphs(self, euler_x_vector, euler_y_vector, imp_euler_x_vector, imp_euler_y_vector,
                                 rk_x_vector, rk_y_vector, exact_x_vector, exact_y_vector):
         euler_error_vector = [0] * len(euler_y_vector)
@@ -51,7 +52,9 @@ class Plot:
         pyplot.ylabel("Error")
         pyplot.show()
 
-    # plotting the max error from N
+    """
+    Plotting the max error from N.
+    """
     def plot_max_error_graph(self, limit, IVPx, IVPy, delta):
 
         euler_max_error_vector = []
